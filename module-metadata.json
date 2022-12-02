@@ -1,0 +1,149 @@
+{
+  "path": ".",
+  "variables": {
+    "prefix": {
+      "name": "prefix",
+      "type": "string",
+      "description": "The prefix that you would like to append to your resources",
+      "default": "icse",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 11
+      }
+    },
+    "resource_group_id": {
+      "name": "resource_group_id",
+      "type": "string",
+      "description": "ID of the resource group where gateways will be provisioned",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 17
+      }
+    },
+    "security_groups": {
+      "name": "security_groups",
+      "type": "list(\n    object({\n      name = string\n      rules = list(\n        object({\n          name      = string\n          direction = string\n          remote    = string\n          tcp = optional(\n            object({\n              port_max = number\n              port_min = number\n            })\n          )\n          udp = optional(\n            object({\n              port_max = number\n              port_min = number\n            })\n          )\n          icmp = optional(\n            object({\n              type = number\n              code = number\n            })\n          )\n        })\n      )\n    })\n  )",
+      "description": "Security groups for VPC",
+      "default": [
+        {
+          "name": "test-group",
+          "rules": [
+            {
+              "direction": "inbound",
+              "name": "allow-ssh",
+              "remote": "0.0.0.0/0",
+              "tcp": {
+                "port_max": 22,
+                "port_min": 22
+              }
+            }
+          ]
+        }
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 35
+      }
+    },
+    "tags": {
+      "name": "tags",
+      "type": "list(string)",
+      "description": "List of Tags for the resource created",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 23
+      }
+    },
+    "vpc_id": {
+      "name": "vpc_id",
+      "type": "string",
+      "description": "ID of the VPC where public gateways will be created",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 5
+      }
+    }
+  },
+  "outputs": {
+    "groups": {
+      "name": "groups",
+      "description": "List of security group names and ids",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 5
+      }
+    }
+  },
+  "required_core": [
+    "\u003e=1.2"
+  ],
+  "required_providers": {
+    "ibm": {
+      "source": "IBM-Cloud/ibm",
+      "version_constraints": [
+        "\u003e=1.43.0"
+      ]
+    }
+  },
+  "managed_resources": {
+    "ibm_is_security_group.security_group": {
+      "mode": "managed",
+      "type": "ibm_is_security_group",
+      "name": "security_group",
+      "attributes": {
+        "for_each": "vpc_id",
+        "name": "prefix",
+        "resource_group": "resource_group_id",
+        "tags": "tags"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 19
+      }
+    },
+    "ibm_is_security_group_rule.rule": {
+      "mode": "managed",
+      "type": "ibm_is_security_group_rule",
+      "name": "rule",
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "rules.tf",
+        "line": 24
+      }
+    }
+  },
+  "data_resources": {},
+  "module_calls": {
+    "security_group_map": {
+      "name": "security_group_map",
+      "source": "./config_modules/list_to_map",
+      "attributes": {
+        "list": "vpc_id"
+      },
+      "managed_resources": null,
+      "data_resources": null,
+      "pos": {
+        "filename": "main.tf",
+        "line": 5
+      }
+    },
+    "security_group_rules_map": {
+      "name": "security_group_rules_map",
+      "source": "./config_modules/nested_list_to_map_and_merge",
+      "attributes": {
+        "list": "vpc_id"
+      },
+      "managed_resources": null,
+      "data_resources": null,
+      "pos": {
+        "filename": "rules.tf",
+        "line": 5
+      }
+    }
+  }
+}
