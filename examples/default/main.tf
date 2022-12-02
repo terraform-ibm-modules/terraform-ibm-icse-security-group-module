@@ -17,7 +17,7 @@ module "security_group_map" {
 ##############################################################################
 
 resource "ibm_is_security_group" "security_group" {
-  for_each       = module.security_group_map.value
+  for_each       = var.vpc_id == null ? {} : module.security_group_map.value
   name           = "${var.prefix}-${each.value.name}"
   vpc            = each.value.vpc_id
   resource_group = var.resource_group_id

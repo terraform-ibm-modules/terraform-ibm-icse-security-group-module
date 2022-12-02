@@ -4,7 +4,7 @@
 
 module "security_group_rules_map" {
   source        = "./config_modules/nested_list_to_map_and_merge"
-  list          = var.security_groups
+  list          = var.vpc_id == null ? [] : var.security_groups
   sub_list_name = "rules"
   add_parent_fields_to_child = [
     {

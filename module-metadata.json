@@ -91,6 +91,7 @@
       "type": "ibm_is_security_group",
       "name": "security_group",
       "attributes": {
+        "for_each": "vpc_id",
         "name": "prefix",
         "resource_group": "resource_group_id",
         "tags": "tags"
@@ -135,7 +136,7 @@
       "name": "security_group_rules_map",
       "source": "./config_modules/nested_list_to_map_and_merge",
       "attributes": {
-        "list": "security_groups"
+        "list": "vpc_id"
       },
       "managed_resources": null,
       "data_resources": null,
