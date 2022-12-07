@@ -128,32 +128,45 @@ statement instead the previous block.
 <!-- BEGIN EXAMPLES HOOK -->
 ## Examples
 
-- [ Default example](examples/default)
-- [ Example that uses existing resources](examples/existing-resources)
-- [ Non default example](examples/non-default)
+- [Examples](examples)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.2 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >=1.43.0 |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_security_group_map"></a> [security\_group\_map](#module\_security\_group\_map) | ./config_modules/list_to_map | n/a |
+| <a name="module_security_group_rules_map"></a> [security\_group\_rules\_map](#module\_security\_group\_rules\_map) | ./config_modules/nested_list_to_map_and_merge | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [ibm_is_security_group.security_group](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group) | resource |
+| [ibm_is_security_group_rule.rule](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_rule) | resource |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_prefix"></a> [prefix](#input\_prefix) | The prefix that you would like to append to your resources | `string` | `"icse"` | no |
+| <a name="input_resource_group_id"></a> [resource\_group\_id](#input\_resource\_group\_id) | ID of the resource group where gateways will be provisioned | `string` | `null` | no |
+| <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | Security groups for VPC | <pre>list(<br>    object({<br>      name = string<br>      rules = list(<br>        object({<br>          name      = string<br>          direction = string<br>          remote    = string<br>          tcp = optional(<br>            object({<br>              port_max = number<br>              port_min = number<br>            })<br>          )<br>          udp = optional(<br>            object({<br>              port_max = number<br>              port_min = number<br>            })<br>          )<br>          icmp = optional(<br>            object({<br>              type = number<br>              code = number<br>            })<br>          )<br>        })<br>      )<br>    })<br>  )</pre> | <pre>[<br>  {<br>    "name": "test-group",<br>    "rules": [<br>      {<br>        "direction": "inbound",<br>        "name": "allow-ssh",<br>        "remote": "0.0.0.0/0",<br>        "tcp": {<br>          "port_max": 22,<br>          "port_min": 22<br>        }<br>      }<br>    ]<br>  }<br>]</pre> | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | List of Tags for the resource created | `list(string)` | `null` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of the VPC where public gateways will be created | `string` | `null` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_groups"></a> [groups](#output\_groups) | List of security group names and ids |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- BEGIN CONTRIBUTING HOOK -->
 

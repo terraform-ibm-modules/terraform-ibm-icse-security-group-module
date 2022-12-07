@@ -15,7 +15,7 @@ const defaultExampleTerraformDir = "examples/default"
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
 
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  defaultExampleTerraformDir,
 		Prefix:        "mod-template",
@@ -30,10 +30,10 @@ func TestRunDefaultExample(t *testing.T) {
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	// TODO: Remove this line after the first merge to primary branch is complete to enable upgrade test
-	t.Skip("Skipping upgrade test until initial code is in primary branch")
+	// TODO: Remove this line after the first merge to master branch is complete to enable upgrade test
+	t.Skip("Skipping upgrade test until initial code is in master branch")
 
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  defaultExampleTerraformDir,
 		Prefix:        "mod-template-upg",

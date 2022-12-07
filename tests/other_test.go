@@ -8,12 +8,12 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
-const nonDefaultExampleTerraformDir = "examples/non-default"
+const nonDefaultExampleTerraformDir = "examples/default"
 
 func TestRunNonDefaultExample(t *testing.T) {
 	t.Parallel()
 
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+	options := testhelper.TestOptionsDefault(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  nonDefaultExampleTerraformDir,
 		Prefix:        "non-default-tmp",

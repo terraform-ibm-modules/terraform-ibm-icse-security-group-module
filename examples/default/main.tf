@@ -1,20 +1,27 @@
 ##############################################################################
-# Resource Group
+# Security Group Dynamic Values
 ##############################################################################
 
-module "resource_group" {
-  source = "git::https://github.com/terraform-ibm-modules/terraform-ibm-resource-group.git?ref=v1.0.4"
-  # if an existing resource group is not set (null) create a new one using prefix
-  resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
-  existing_resource_group_name = var.resource_group
+module "security_group_map" {
+  source = "./config_modules/list_to_map"
+  list = var.vpc_id == null ? [] : [
+    for group in var.security_groups :
+    merge(group, { vpc_id = var.vpc_id })
+  ]
 }
 
 ##############################################################################
-# VPC
+
+##############################################################################
+# Security Groups
 ##############################################################################
 
-resource "ibm_is_vpc" "vpc" {
-  name           = "${var.prefix}-vpc"
-  resource_group = module.resource_group.resource_group_id
-  tags           = var.resource_tags
+resource "ibm_is_security_group" "security_group" {
+  for_each       = var.vpc_id == null ? {} : module.security_group_map.value
+  name           = "${var.prefix}-${each.value.name}"
+  vpc            = each.value.vpc_id
+  resource_group = var.resource_group_id
+  tags           = var.tags
 }
+
+##############################################################################
